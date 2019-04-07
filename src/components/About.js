@@ -7,7 +7,7 @@ function About({ match, auth, updateUserState }) {
     <div>
       <div>
         <h2>ABOUT PAGE</h2>
-        <p>some content...</p>
+        <p>This is the about page.  No need to Log in to see this.</p>
       </div>
       <div>
           {!auth && <Login updateUserState={updateUserState}  />}

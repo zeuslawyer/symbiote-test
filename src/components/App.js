@@ -5,7 +5,7 @@ import "./App.css";
 import Home from "./Home";
 import About from "./About";
 import Page from "./Page";
-import NewPage from './NewPage'
+import NewPage from "./NewPage";
 
 class App extends Component {
   constructor(props) {
@@ -14,19 +14,11 @@ class App extends Component {
     this.state = {
       pages: [
         {
-          name: "Boo Page",
-          path: "boo",
+          name: "Hard Coded Page",
+          path: "hardcodedpage",
           content: {
-            title: `This is the Boo Page`,
-            body: "Welcome to the BOO page"
-          }
-        },
-        {
-          name: "Test Page One",
-          path: "TestPageOne",
-          content: {
-            title: `This is the Test Page 1 Page`,
-            body: "Welcome to the Test Page 1 page"
+            title: `This is a Hard Coded Page`,
+            body: "Welcome to the Hard Coded Page"
           }
         }
       ],
@@ -50,16 +42,35 @@ class App extends Component {
     this.setState({ user });
   };
 
-  renderPagesInNav(){
-    return this.state.pages.map((page)=>{
+  addPage = ({ title, body }) => {
+    let newPage = {
+      name: title,
+      path: title.split(" ").join(""),
+      content: {
+        title,
+        body
+      }
+    };
+    let pages = this.state.pages;
+    this.setState({
+      pages: [...pages, newPage]
+    });
+  };
+
+  renderPagesInNav() {
+    return this.state.pages.map(page => {
       return (
         <li key={page.content.title}>
           <Link to={`/pages/${page.path}`}>{page.content.title}</Link>
-      </li>
-      )
-    })
+        </li>
+      );
+    });
   }
 
+  handleLogout = event => {
+    event.preventDefault();
+    this.updateUserState("", "");
+  };
 
   render() {
     let loggedIn = this.state.user.loggedIn;
@@ -73,21 +84,52 @@ class App extends Component {
             <li>
               <Link to="/about">About</Link>
             </li>
-            { this.renderPagesInNav()}
+            {this.renderPagesInNav()}
             <li>
-              <Link to="/newpage">New Page</Link>
+              <Link to="/newpage"> Add A New Page</Link>
             </li>
           </ul>
 
           <hr />
 
-        {/* ROUTES FOR STATIC PAGES */}
-          <Route exact path="/" render={(props)=><Home {...props} auth={loggedIn} updateUserState={this.updateUserState} />} />
-          <Route path="/about" render={(props)=><About {...props} auth={loggedIn} updateUserState={this.updateUserState}/>}  />
-          <Route path="/newpage" render={(props)=><NewPage {...props} auth={loggedIn}  />} />
-          
-          {/* ROUTES FOR USER PAGES */}
+          {/* ROUTES FOR STATIC PAGES */}
+          {/* HOME PAGE */}
           <Route
+            exact
+            path="/"
+            render={props => (
+              <Home
+                {...props}
+                auth={loggedIn}
+                updateUserState={this.updateUserState}
+              />
+            )}
+          />
+
+          {/* ABOUT PAGE */}
+          <Route
+            path="/about"
+            render={props => (
+              <About
+                {...props}
+                auth={loggedIn}
+                updateUserState={this.updateUserState}
+              />
+            )}
+          />
+
+          {/* NEW PAGE CREATION */}
+          <Route
+            path="/newpage"
+            render={props => (
+              <NewPage {...props} auth={loggedIn} addPage={this.addPage} updateUserState={this.updateUserState}/>
+            )}
+          />
+
+          {/* ROUTES FOR USER PAGES */}
+          {/* TODO: use the context system to pass the updateUserState() function? */}
+          <Route
+            exact
             path="/pages/:id"
             render={props => (
               <Page
@@ -98,6 +140,13 @@ class App extends Component {
               />
             )}
           />
+          <div>
+            {loggedIn && (
+              <Link to="/" onClick={this.handleLogout}>
+                Logout
+              </Link>
+            )}
+          </div>
         </div>
       </Router>
     );

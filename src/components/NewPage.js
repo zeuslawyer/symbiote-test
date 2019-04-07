@@ -1,21 +1,77 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import Login from "./Login";
 
 export class NewPage extends Component {
-  render() {
-    return this.renderForm();
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "",
+      body: ""
+    };
   }
 
-  renderForm() {
+  handleInput = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.props.addPage(this.state);
+    
+    //clear state so form is blank again
+    this.setState({
+      title: "",
+      body: ""
+    })
+  };
+
+  renderNewPageForm() {
+    return (
+      <div style={{ margin: "50px auto" }}>
+        <h1>Add New Page: </h1>
+        <form onSubmit={this.handleSubmit}>
+          <label style={{ display: "block", marginBottom: "15px" }}>
+            Title:
+            <input
+              type="text"
+              name="title"
+              value={this.state.title}
+              onChange={this.handleInput}
+            />
+          </label>
+
+          <label style={{ display: "block", marginBottom: "15px" }}>
+            Body:
+            <textarea
+              name="body"
+              value={this.state.body}
+              onChange={this.handleInput}
+            />
+          </label>
+
+          <input type="submit" value="Submit" />
+        </form>
+      </div>
+    );
+  }
+
+  render() {
     if (this.props.auth) {
-      return (
-        <div>
-          <h1>This is the new form</h1>
-          <p>what do you want to say...?</p>
-        </div>
-      );
+      return this.renderNewPageForm();
     }
+
     //if not loggedin
-    return <h1>You must log in to add content</h1>;
+    return (
+      <div>
+        <h3>
+          You must <Link to="/">log in</Link> to add content
+        </h3>
+        <Login updateUserState={this.props.updateUserState} /> />
+      </div>
+    );
   }
 }
 
