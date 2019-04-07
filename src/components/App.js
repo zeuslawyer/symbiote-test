@@ -26,8 +26,7 @@ class App extends Component {
         name: "",
         pwd: "",
         loggedIn: false
-      },
-      currentPageIndex: 0
+      }
     };
   }
 
@@ -57,10 +56,10 @@ class App extends Component {
     });
   };
 
-  renderPagesInNav() {
+  renderUserPagesInNav() {
     return this.state.pages.map(page => {
       return (
-        <li key={page.content.title}>
+        <li key={page.content.title} className="nav-item">
           <Link to={`/pages/${page.path}`}>{page.content.title}</Link>
         </li>
       );
@@ -75,80 +74,96 @@ class App extends Component {
   render() {
     let loggedIn = this.state.user.loggedIn;
     return (
-      <Router>
-        <div>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            {this.renderPagesInNav()}
-            <li>
-              <Link to="/newpage"> Add A New Page</Link>
-            </li>
-          </ul>
+      <div className="container-fluid">
+        <Router>
+          <div className="row">
+            <div className="vertical-nav col-2">
+              <ul>
+                <li className="nav-item">
+                  <Link to="/">Home</Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/about">About</Link>
+                </li>
+                {/* render <li> elements for each page in this.state.pages  */}
+                {this.renderUserPagesInNav()}
+                <li className="nav-item">
+                  <Link to="/newpage"> Add A New Page</Link>
+                </li>
 
-          <hr />
+                {/* LOGOUT */}
+                <li>
+                  <div className="logout">
+                    {loggedIn && (
+                      <Link to="/" onClick={this.handleLogout}>
+                        Logout
+                      </Link>
+                    )}
+                  </div>
+                </li>
+              </ul>
+            </div>
 
-          {/* ROUTES FOR STATIC PAGES */}
-          {/* HOME PAGE */}
-          <Route
-            exact
-            path="/"
-            render={props => (
-              <Home
-                {...props}
-                auth={loggedIn}
-                updateUserState={this.updateUserState}
+            <hr />
+
+            <div className="col-10">
+              {/* ROUTES FOR STATIC PAGES */}
+              {/* HOME PAGE */}
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <Home
+                    {...props}
+                    auth={loggedIn}
+                    updateUserState={this.updateUserState}
+                  />
+                )}
               />
-            )}
-          />
 
-          {/* ABOUT PAGE */}
-          <Route
-            path="/about"
-            render={props => (
-              <About
-                {...props}
-                auth={loggedIn}
-                updateUserState={this.updateUserState}
+              {/* ABOUT PAGE */}
+              <Route
+                path="/about"
+                render={props => (
+                  <About
+                    {...props}
+                    auth={loggedIn}
+                    updateUserState={this.updateUserState}
+                  />
+                )}
               />
-            )}
-          />
 
-          {/* NEW PAGE CREATION */}
-          <Route
-            path="/newpage"
-            render={props => (
-              <NewPage {...props} auth={loggedIn} addPage={this.addPage} updateUserState={this.updateUserState}/>
-            )}
-          />
-
-          {/* ROUTES FOR USER PAGES */}
-          {/* TODO: use the context system to pass the updateUserState() function? */}
-          <Route
-            exact
-            path="/pages/:id"
-            render={props => (
-              <Page
-                {...props}
-                auth={loggedIn}
-                pages={this.state.pages}
-                updateUserState={this.updateUserState}
+              {/* NEW PAGE CREATION */}
+              <Route
+                path="/newpage"
+                render={props => (
+                  <NewPage
+                    {...props}
+                    auth={loggedIn}
+                    addPage={this.addPage}
+                    updateUserState={this.updateUserState}
+                  />
+                )}
               />
-            )}
-          />
-          <div>
-            {loggedIn && (
-              <Link to="/" onClick={this.handleLogout}>
-                Logout
-              </Link>
-            )}
+
+              {/* ROUTES FOR USER PAGES */}
+              {/* TODO: use the context system to pass the updateUserState() function? */}
+              <Route
+                exact
+                path="/pages/:id"
+                render={props => (
+                  <Page
+                    {...props}
+                    auth={loggedIn}
+                    pages={this.state.pages}
+                    updateUserState={this.updateUserState}
+                  />
+                )}
+              />
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </div>
     );
   }
 }
