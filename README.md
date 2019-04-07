@@ -1,5 +1,10 @@
 #NOTES
 <hr>
+### Install and Serve
+Install packages by running `npm install` from the project root.
+Then run `npm run start` to serve locally.
+
+
 ### General summary
 The app uses `react-dom-router` for routing and navigation. 
 
@@ -13,7 +18,7 @@ The App has the following pages that are components that are dynamically rendere
 
 Dynamic page components <b>need login </b> to see the title and body of those pages.
 
-### App level state
+### App-level state
 ```
 //App.js
 {
@@ -22,6 +27,7 @@ Dynamic page components <b>need login </b> to see the title and body of those pa
 
 }
 ```
+__note__: form components have component-level state, as the form inputs are controlled components. 
 
 ### App handlers passed as props
 1) `updateUserState`: is passed as prop to the `<Login />` component in all `<Page />` components. Upon login the name and password properties are updated in the App-level `state.user` object.

@@ -77,7 +77,7 @@ class App extends Component {
       <div className="container-fluid">
         <Router>
           <div className="row">
-            <div className="vertical-nav col-2">
+            <div className="vertical-nav col-3">
               <ul>
                 <li className="nav-item">
                   <Link to="/">Home</Link>
@@ -106,7 +106,7 @@ class App extends Component {
 
             <hr />
 
-            <div className="col-10">
+            <div className="col-9">
               {/* ROUTES FOR STATIC PAGES */}
               {/* HOME PAGE */}
               <Route

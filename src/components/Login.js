@@ -24,7 +24,7 @@ export class Login extends Component {
     return (
       <div style={{"margin": "50px auto"}} >
 
-        <h1 > Login: </h1>
+        <h3> Login: </h3>
         <form onSubmit = {this.handleSubmit}>
         <label style={{ "display": "block", "marginBottom": "15px" }}>
           Name:
